@@ -22,6 +22,8 @@ class Rule:
         return '{} -> {}'.format(self.trash, self.remain)
 
 
+# check_rule checks if there is a rule regarding duplicates in certain directories
+# and creates a new one if no rule present
 def check_rule(dir1, dir2):
     for rule in rules:
         if (rule.trash == dir1 and rule.remain == dir2) or (rule.trash == dir2 and rule.remain == dir1):
@@ -45,8 +47,10 @@ def find_dupes(entries):
         if dupes:
             for dupe in dupes:
                 rule = check_rule(entry.directory, dupe.directory)
+                # if there is a duplicate files, file from `trash` directory will be removed
                 trash = rule.trash
                 # checking if both files are present
+                # just in case one of files was already deleted in different conflict
                 if os.path.exists(entry.get_path()) and os.path.exists(dupe.get_path()):
                     if entry.directory == trash:
                         print('REMOVING', entry.get_path())
